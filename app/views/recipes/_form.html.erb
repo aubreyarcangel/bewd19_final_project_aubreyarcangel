@@ -1,0 +1,46 @@
+<%= simple_form_for @recipe do |f| %>
+<% if @recipe.errors.any? %>
+<div id="errors">
+<p><%= @recipes.errors.count %>Prevented this recipe from saving</p>
+<ul>
+        <% @recipe.errors.full_messages.each do |msg| %>
+          <li>
+            <%= msg %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<div class="panel-body">
+<%= f.input :image, image: 'Recipe image' %>
+<%= f.input :title, title: 'Recipe title' %>
+<%= f.input :description, description: 'Recipe Description' %>
+
+<div class="row">
+      <div class="col-md-6">
+        <h3>Ingredients</h3>
+        <div id="ingredients">
+          <%= f.simple_fields_for :ingredients do |ingredient| %>
+            <%= render 'ingredient_fields', f: ingredient %>
+          <% end %>
+				<div class="links">
+            <%= link_to_add_association 'Add Ingredient', f, :ingredients %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="col-md-6">
+  <h3>Directions</h3>
+  <div id="directions">
+    <%= f.simple_fields_for :directions do |direction| %>
+      <%= render 'direction_fields', f: direction %>
+    <% end %>
+    <div class="links">
+      <%= link_to_add_association 'Add Step', f, :directions %>
+    </div>
+  </div>
+</div>
+<%= f.submit :submit %>
+
+<% end %>
