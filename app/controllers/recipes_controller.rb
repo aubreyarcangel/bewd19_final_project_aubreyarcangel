@@ -1,9 +1,14 @@
 class RecipesController < ApplicationController
 	before_action :find_recipe, only: [:show, :edit, :update, :destroy]
 	before_action :authenticate_user!, except: [:index, :show]
-	
+
 	def index
-		@recipe = Recipe.all.order("created_at DESC")
+  		if user_signed_in?
+  		@recipe = Recipe.all.order("created_at DESC")
+  		else
+    	render 'not_logged_in'
+  	end
+		
 	end
 
 	def show
@@ -17,7 +22,7 @@ class RecipesController < ApplicationController
 		@recipe = current_user.recipes.build(recipe_params)
 
 		if @recipe.save
-			redirect_to @recipe, notice: "New recipe created!"
+			redirect_to @recipe
 		else
 			render 'new'
 		end
@@ -28,7 +33,7 @@ class RecipesController < ApplicationController
 
 	def update
 		if @recipe.update(recipe_params)
-			redirect_to @recipe_params
+			redirect_to @recipe
 		else
 			render 'edit'
 		end
@@ -36,7 +41,7 @@ class RecipesController < ApplicationController
 
 	def destroy
 		@recipe.destroy
-		redirect_to root_path, notice: "Recipe deleted!"
+		redirect_to root_path
 	end
 
 	private
